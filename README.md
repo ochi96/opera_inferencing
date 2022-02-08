@@ -1,2 +1,2 @@
 # opera_inferencing
-Inferencing file for opera files
+Inferencing process for opera audio
