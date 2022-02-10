@@ -1,0 +1,13 @@
+DEBUG:root:Path 'E:\Projects\Freelancing\Opera audio files\opera_inferencing/Models/Females_A/PCA/Females_A_pca.joblib' exists: OK
+DEBUG:root:Path 'E:\Projects\Freelancing\Opera audio files\opera_inferencing/Models/Females_A/Scaler/Females_A_scaler.joblib' exists: OK
+DEBUG:root:Path 'E:\Projects\Freelancing\Opera audio files\opera_inferencing/Models/Females_A/Reports/Females_A_label_mapping.joblib' exists: OK
+DEBUG:root:Path 'E:\Projects\Freelancing\Opera audio files\opera_inferencing/Models/Females_A/ANN/Females_A' exists: OK
+DEBUG:root:Path 'E:\Projects\Freelancing\Opera audio files\opera_inferencing/Models/Females_B/PCA/Females_B_pca.joblib' exists: OK
+DEBUG:root:Path 'E:\Projects\Freelancing\Opera audio files\opera_inferencing/Models/Females_B/Scaler/Females_B_scaler.joblib' exists: OK
+DEBUG:root:Path 'E:\Projects\Freelancing\Opera audio files\opera_inferencing/Models/Females_B/Reports/Females_B_label_mapping.joblib' exists: OK
+DEBUG:root:Path 'E:\Projects\Freelancing\Opera audio files\opera_inferencing/Models/Females_B/ANN/Females_B' exists: OK
+DEBUG:root:Path 'E:\Projects\Freelancing\Opera audio files\opera_inferencing/Data/serving_data/' exists: OK
+DEBUG:root:Path 'E:\Projects\Freelancing\Opera audio files\opera_inferencing/Csv_Files/females_mfccs.csv' exists: OK
+DEBUG:root:Path 'E:\Projects\Freelancing\Opera audio files\opera_inferencing/Data/serving_data/testing_audio/Kerstin Thorborg/Wagnerian Contralto Kerstin Thorborg Sings _So ist es denn,_ from Die Walküre, Act II.  1940-sFGGaEr08-M.wav' exists: OK
+DEBUG:root:Moving file to spleeting directory...
+DEBUG:root:Spleeting files into components, results in output_dir
