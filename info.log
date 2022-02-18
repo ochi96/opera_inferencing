@@ -9,5 +9,3 @@ DEBUG:root:Path 'E:\Projects\Freelancing\Opera audio files\opera_inferencing/Mod
 DEBUG:root:Path 'E:\Projects\Freelancing\Opera audio files\opera_inferencing/Data/serving_data/' exists: OK
 DEBUG:root:Path 'E:\Projects\Freelancing\Opera audio files\opera_inferencing/Csv_Files/females_mfccs.csv' exists: OK
 DEBUG:root:Path 'E:\Projects\Freelancing\Opera audio files\opera_inferencing/Data/serving_data/testing_audio/Kerstin Thorborg/Wagnerian Contralto Kerstin Thorborg Sings _So ist es denn,_ from Die Walküre, Act II.  1940-sFGGaEr08-M.wav' exists: OK
-DEBUG:root:Moving file to spleeting directory...
-DEBUG:root:Spleeting files into components, results in output_dir
