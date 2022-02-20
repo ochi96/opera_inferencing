@@ -32,7 +32,8 @@ hyperframe==6.0.1
 idna==3.3
 importlib-metadata==3.10.1
 joblib==1.1.0
-keras==2.7.0
+keras==2.8.0
+Keras-Applications==1.0.8
 keras-nightly==2.5.0.dev2021032900
 Keras-Preprocessing==1.1.2
 kiwisolver==1.3.2
@@ -43,7 +44,7 @@ Markdown==3.3.4
 matplotlib==3.5.1
 norbert==0.2.1
 numba==0.53.1
-numpy==1.19.5
+numpy==1.21.5
 oauthlib==3.2.0
 opt-einsum==3.3.0
 packaging==21.3
@@ -57,6 +58,7 @@ pycparser==2.21
 pyparsing==3.0.7
 python-dateutil==2.8.2
 pytz==2021.3
+PyYAML==6.0
 requests==2.27.1
 requests-oauthlib==1.3.1
 resampy==0.2.2
@@ -72,10 +74,11 @@ spleeter==2.3.0
 tensorboard==2.8.0
 tensorboard-data-server==0.6.1
 tensorboard-plugin-wit==1.8.1
-tensorflow==2.5.0
+tensorflow==2.8.0
 tensorflow-estimator==2.5.0
 tensorflow-io-gcs-filesystem==0.24.0
 termcolor==1.1.0
+tf-estimator-nightly==2.8.0.dev2021122109
 threadpoolctl==3.1.0
 typer==0.3.2
 typing-extensions==3.7.4.3

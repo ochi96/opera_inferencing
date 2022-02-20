@@ -29,6 +29,7 @@ model_dir = r"E:\Projects\Freelancing\Opera audio files\opera_inferencing/Models
 
 # mfccs_features = create_mfccs()
 
-
-model = tf.keras.models.load_model("Females_A")
+# with 
+print('lol0')
+model = tf.keras.models.load_model("./Females_A")
 print('lol')

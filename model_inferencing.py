@@ -2,6 +2,7 @@
 import os
 import logging
 import subprocess
+import random
 
 import numpy as np
 import pandas as pd
@@ -14,8 +15,6 @@ import sys
 import time
 import shutil
 
-# %matplotlib inline
-import urllib.request as urllib2 # For python3
 from sklearn import metrics
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.decomposition import PCA
@@ -23,9 +22,6 @@ from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture
 
 import librosa
-import matplotlib.pyplot as plt
-from matplotlib import cm
-from matplotlib.colors import LogNorm
 
 # import pysoundfile
 import ffmpeg
@@ -33,10 +29,9 @@ import spleeter
 from PIL import Image
 
 from sklearn.preprocessing import LabelEncoder, StandardScaler, MinMaxScaler
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras import regularizers
+import tensorflow as tf
 from tensorflow import keras
-from sklearn.model_selection import train_test_split
+
 
 logging.basicConfig(level=logging.DEBUG, filename="info.log", filemode='w')
 
@@ -120,10 +115,10 @@ class Preprocessing(Config):
             mfccs_processed = list(mfccs_processed)
             return mfccs_processed
 
-        file_paths = ['{0}/{1}'.format(self.audio_main_dir, file_item) for file_item in os.listdir(audio_main_dir)]
+        file_paths = ['{0}/{1}'.format(self.audio_main_dir, file_item) for file_item in os.listdir(self.audio_main_dir)]
         mfcc_features = list(map(extract_features, file_paths))
         random.shuffle(mfcc_features)
-
+        
         return mfcc_features
 
 
@@ -133,18 +128,72 @@ class ModelInferencing(Preprocessing):
         Preprocessing.__init__(self)
 
     def load_models(self):
-        print(self.selected_models)
-        print(self.base_dir)
         pca_model_A, pca_model_B = [load(self.base_dir + model['pca_model_path']) for model in self.selected_models]
         scaler_model_A, scaler_model_B = [load(self.base_dir + model['scaler_model_path']) for model in self.selected_models]
-        model_A, model_B = [keras.models.load_model(self.base_dir + model['keras_model_dir_path']) for model in self.selected_models]
+        keras_model_A, keras_model_B = [tf.keras.models.load_model(self.base_dir + model['keras_model_dir_path']) for model in self.selected_models]
         model_A_mapping, model_B_mapping = [load(self.base_dir + model['label_mapping_path']) for model in self.selected_models]
-        print('completed')
+        
+        self.model_A = {'pca_model': pca_model_A, 'standard_scaler_model': scaler_model_A, 'keras_model': keras_model_A, 'label_mapping': model_A_mapping}
+        self.model_B = {'pca_model': pca_model_B, 'standard_scaler_model': scaler_model_B, 'keras_model': keras_model_B, 'label_mapping': model_B_mapping}
+        self.models = (self.model_A, self.model_B)
 
-    # scaled_features_model_A, scaled_features_model_B = scaled_features
+        pass
 
-    
-        # np.array(mfcc_features).shape
+    def predict(self, mfcc_features):
+
+        self.mfcc_features = mfcc_features
+
+        def inferencing_postprocess(post_prediction_info):
+            model_predictions, model_mappings, label_target = post_prediction_info
+            predictions_mappings = list(zip(model_predictions, model_mappings))
+            pred_targets_probabilities = []
+            for predictions, mapping in predictions_mappings:
+                probabilities = [max(predictions[i]) for i in range(len(predictions))]
+                pred_targets = [predictions[i].argmax() for i in range(len(predictions))]
+                pred_targets = [mapping[item] for item in pred_targets]
+                pred_targets_probabilities.append([pred_targets, probabilities])  
+            predicted_label = final_inferencing(pred_targets_probabilities, label_target)
+            return predicted_label
+        
+        def final_inferencing(pred_targets_probabilities, label_target):
+            prediction_percentage = []
+            for item in pred_targets_probabilities:
+                pred_targets, pred_probabilities = item
+                predicted = max(set(pred_targets), key = pred_targets.count)
+                # print(predicted)
+                zipped_combination = list(zip(pred_targets, pred_probabilities))
+                i=0
+                for target, probability in zipped_combination:
+                    if target == predicted:
+                        if probability>0.9:
+                            i = i + 1
+                percentage = i*100/pred_targets.count(predicted)
+                print(percentage)
+                prediction_percentage.append(percentage)
+            model_index = prediction_percentage.index(max(prediction_percentage))
+            # print(prediction_percentage)
+            # print(model_index)
+            pred_targets, probabilities = pred_targets_probabilities[model_index]
+            predicted = max(set(pred_targets), key = pred_targets.count)
+            # print(predicted)
+            # print(label_target)
+            for label, target in label_target:
+                if target==predicted:
+                    predicted_label = label
+                    break
+            return predicted_label
+
+        mappings = []
+        all_predictions = []
+        for model in self.models:
+            scaled_mfcc_features = model['standard_scaler_model'].transform(model['pca_model'].transform(self.mfcc_features))
+            model_predictions = model['keras_model'].predict(scaled_mfcc_features)
+            all_predictions.append(model_predictions)
+            mappings.append(model['label_mapping'])
+        
+        post_prediction_info = [all_predictions, mappings, self.label_target]
+
+        return inferencing_postprocess(post_prediction_info)
 
 audio_file = 'testing_audio/Kerstin Thorborg/Wagnerian Contralto Kerstin Thorborg Sings _So ist es denn,_ from Die Walküre, Act II.  1940-sFGGaEr08-M.wav'
 gender = 'female'
@@ -152,15 +201,14 @@ config = Config(audio_file = audio_file, artist_gender = gender)
 config.check_paths()
 
 prep = Preprocessing()
-# prep.spleet_audio_files()
-# prep.remove_silence()
-# prep.split_into_six_seconds(6)
-# mfccs = prep.create_mfccs
+prep.spleet_audio_files()
+prep.remove_silence()
+prep.split_into_six_seconds(6)
+mfcc_features = prep.create_mfccs()
 
 lol = ModelInferencing()
 lol.load_models()
+label = lol.predict(mfcc_features)
 
-
-
-
+print('\n Predicted Label is : {}'.format(label))
 
